@@ -91,15 +91,15 @@ public class SQL {
     }
 
     public String dbName = "kom";
-    public static String connStr = "jdbc:mysql://localhost:3306/kom?autoReconnect=true";
+    public static String connStr = "jdbc:mysql://localhost:3306/kom?autoReconnect=true&user=komuser&password=KomSenha&useSSL=false";
 
     private Connection createConnection() {
         try {
             dbName = KoM.config.getConfig().getString("database.name");
             KoM.log.info("Attempting to Connect to Database: " + dbName);
-            connStr = "jdbc:mysql://localhost:3306/kom?autoReconnect=true";
+            connStr = "jdbc:mysql://localhost:3306/kom?autoReconnect=true&user=komuser&password=KomSenha&useSSL=false";
             if(KoM.serverTestes)
-                connStr = "jdbc:mysql://localhost:3306/komtestes?autoReconnect=true";
+                connStr = "jdbc:mysql://localhost:3306/kom?autoReconnect=true&user=komuser&password=KomSenha&useSSL=false";
             try {
                 Class.forName("com.mysql.jdbc.Driver").newInstance();
             } catch (InstantiationException ex) {
@@ -107,7 +107,7 @@ public class SQL {
             } catch (IllegalAccessException ex) {
                 ex.printStackTrace();
             }
-            connection = DriverManager.getConnection(connStr, "root", KoM.camila);
+            connection = DriverManager.getConnection(connStr);
             return connection;
         } catch (ClassNotFoundException e) {
             KoM.log.log(Level.SEVERE, "[KoMLevel] nao achei a lib", e);

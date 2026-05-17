@@ -30,13 +30,12 @@ import org.bukkit.inventory.ItemStack;
  */
 public class MercadoSQL {
 
-    public static String url = "jdbc:mysql://localhost:3306/";
-    public static String user = "root";
+    public static String url = "jdbc:mysql://localhost:3306/kom?autoReconnect=true&user=komuser&password=KomSenha&useSSL=false";
+    public static String user = "komuser";
     public static Connection connection;
 
     public static void InitMysql() {
         try {
-            url = url + "kom";
             MercadoSQL.ConnectMySQL();
 
             PreparedStatement statement = connection.prepareStatement("CREATE TABLE if not exists PRODUTOS (\n"
@@ -167,13 +166,13 @@ public class MercadoSQL {
         try {
             Class.forName("com.mysql.jdbc.Driver").newInstance();
             if (connection == null) {
-                connection = DriverManager.getConnection(url, user, KoM.camila);
+                connection = DriverManager.getConnection(url);
                 if (!connection.isValid(100)) {
                     Bukkit.getServer().shutdown();
                     throw new Exception();
                 }
             } else if (connection.isClosed()) {
-                connection = DriverManager.getConnection(url, user, KoM.camila);
+                connection = DriverManager.getConnection(url);
                 if (!connection.isValid(100)) {
                     Bukkit.getServer().shutdown();
                     throw new Exception();

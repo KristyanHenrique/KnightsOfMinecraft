@@ -81,12 +81,13 @@ public class SBCore {
             ScoreboardManager.setScoreLine(p, i--, ChatColor.GRAY + "" + ChatColor.BOLD + " " + criminoso.toUpperCase() + " ");
             ScoreboardManager.setScoreLine(p, i--, "");
         }
-        int quests = KoM.quests.getQuests().size();
-        int feitas = KoM.quests.getQuester(p.getUniqueId()).completedQuests.size();
+        if (KoM.questService.isEnabled()) {
+            int quests = KoM.questService.getTotalQuestCount();
+            int feitas = KoM.questService.getCompletedQuestCount(p);
+            int pct = quests == 0 ? 0 : (100 * feitas) / quests;
 
-        int pct = (100 * feitas) / quests;
-        
-        ScoreboardManager.setScoreLine(p, i--, ChatColor.BLUE + "" + ChatColor.BOLD + "Quests");
-        ScoreboardManager.setScoreLine(p, i--, feitas +" / "+quests +" ("+pct+"%)");
+            ScoreboardManager.setScoreLine(p, i--, ChatColor.BLUE + "" + ChatColor.BOLD + "Quests");
+            ScoreboardManager.setScoreLine(p, i--, feitas + " / " + quests + " (" + pct + "%)");
+        }
     }
 }

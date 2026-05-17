@@ -1,0 +1,8 @@
+permissions:
+  kom.admin:
+    description: Admin permission
+    default: op
+
+  kom.player:
+    description: Player permission
+    default: true

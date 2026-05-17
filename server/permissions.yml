@@ -1,0 +1,12 @@
+permissions:
+  maniacomandos.gm:
+    description: Permite usar comando GM
+    default: op
+
+  kom.admin:
+    description: Permissões administrativas
+    default: op
+
+  kom.vip:
+    description: Grupo VIP
+    default: false

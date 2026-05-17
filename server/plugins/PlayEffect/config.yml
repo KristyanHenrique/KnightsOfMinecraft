@@ -1,0 +1,12 @@
+general:
+  check-updates: true
+  language: english
+  language-save: false
+effects:
+  wand-item: COAL
+  play-smoke-for-sound: false
+  queue:
+    effects-per-tick: 100
+    tick-interval: 1
+system:
+  ProtcolLib-support: true

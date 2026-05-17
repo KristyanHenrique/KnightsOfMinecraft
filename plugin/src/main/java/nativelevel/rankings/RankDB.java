@@ -18,7 +18,7 @@ import org.bukkit.entity.Player;
  */
 public class RankDB {
 
-    static String url = "jdbc:mysql://localhost:3306/kom?autoReconnect=true";
+    static String url = "jdbc:mysql://localhost:3306/kom?autoReconnect=true&user=komuser&password=KomSenha&useSSL=false";
 
     public static void InitMysql() {
         try {

@@ -304,9 +304,9 @@ public class ClanLand {
         setupEconomy();
         setupPermissions();
         String dbName = KoM.config.getConfig().getString("database.name");
-        String connStr = "jdbc:mysql://localhost:3306/kom?autoReconnect=true";
+        String connStr = "jdbc:mysql://localhost:3306/kom?autoReconnect=true&user=komuser&password=KomSenha&useSSL=false";
         if(KoM.serverTestes)
-                connStr = "jdbc:mysql://localhost:3306/komtestes?autoReconnect=true";
+                connStr = "jdbc:mysql://localhost:3306/kom?autoReconnect=true&user=komuser&password=KomSenha&useSSL=false";
         KoM._instance.getDataFolder().mkdirs();
         Bukkit.getPluginCommand("terreno").setExecutor(new Terreno());
         try {
@@ -590,30 +590,105 @@ public class ClanLand {
         return Arrays.asList(bm.getPage(1).split("\n"));
     }
 
-    private static BookMeta getBookMeta(Location l) {
-        Block b = l.getChunk().getBlock(0, 0, 0);
-        if (!b.getType().equals(Material.CHEST)) {
-            b.getRelative(BlockFace.UP).setType(Material.BEDROCK);
-            b.setType(Material.CHEST);
-        }
-        BookMeta bm;
-        Inventory inv = ((Chest) b.getState()).getBlockInventory();
-        if (inv == null) {
-            KoM.log.info("BOOOK SENDO NULL !!!!");
-        }
+//    private static BookMeta getBookMeta(Location l) {
+//        Block b = l.getChunk().getBlock(0, 0, 0);
+//        if (!b.getType().equals(Material.CHEST)) {
+//            b.getRelative(BlockFace.UP).setType(Material.BEDROCK);
+//            b.setType(Material.CHEST);
+//        }
+//        BookMeta bm;
+//        Inventory inv = ((Chest) b.getState()).getBlockInventory();
+//        if (inv == null) {
+//            KoM.log.info("BOOOK SENDO NULL !!!!");
+//        }
+//
+//        if (inv.getItem(0) == null || !inv.getItem(0).getType().equals(Material.WRITTEN_BOOK)) {
+//            log.log(Level.INFO, "creating info for chunk {0}, {1}", new Object[]{
+//                l.getChunk().getX(), l.getChunk().getZ()
+//            });
+//            inv.setItem(0, new ItemStack(Material.WRITTEN_BOOK));
+//            bm = (BookMeta) inv.getItem(0).getItemMeta();
+//            bm.setAuthor("none");
+//            bm.addPage("");
+//            bm.setTitle("WILD");
+//            inv.getItem(0).setItemMeta(bm);
+//        }
+//        return (BookMeta) inv.getItem(0).getItemMeta();
+//    }
 
-        if (inv.getItem(0) == null || !inv.getItem(0).getType().equals(Material.WRITTEN_BOOK)) {
-            log.log(Level.INFO, "creating info for chunk {0}, {1}", new Object[]{
-                l.getChunk().getX(), l.getChunk().getZ()
-            });
-            inv.setItem(0, new ItemStack(Material.WRITTEN_BOOK));
-            bm = (BookMeta) inv.getItem(0).getItemMeta();
-            bm.setAuthor("none");
-            bm.addPage("");
-            bm.setTitle("WILD");
-            inv.getItem(0).setItemMeta(bm);
+    private static BookMeta getBookMeta(Location l) {
+
+        try {
+
+            Block b = l.getChunk().getBlock(0, 0, 0);
+
+            // cria chest se nao existir
+            if (b.getType() != Material.CHEST) {
+
+                b.getRelative(BlockFace.UP).setType(Material.BEDROCK);
+
+                b.setType(Material.CHEST);
+
+                b.getState().update(true, true);
+            }
+
+            // garante state correto
+            if (!(b.getState() instanceof Chest)) {
+
+                KoM.log.warning("Bloco nao virou chest em "
+                        + l.getChunk().getX() + ", "
+                        + l.getChunk().getZ());
+
+                return null;
+            }
+
+            Chest chest = (Chest) b.getState();
+
+            Inventory inv = chest.getBlockInventory();
+
+            if (inv == null) {
+
+                KoM.log.warning("Inventory null");
+
+                return null;
+            }
+
+            ItemStack item = inv.getItem(0);
+
+            // cria livro
+            if (item == null || item.getType() != Material.WRITTEN_BOOK) {
+
+                item = new ItemStack(Material.WRITTEN_BOOK);
+
+                BookMeta bm = (BookMeta) item.getItemMeta();
+
+                bm.setAuthor("none");
+                bm.setTitle("WILD");
+                bm.addPage("");
+
+                item.setItemMeta(bm);
+
+                inv.setItem(0, item);
+
+                return bm;
+            }
+
+            if (!(item.getItemMeta() instanceof BookMeta)) {
+
+                KoM.log.warning("ItemMeta nao eh BookMeta");
+
+                return null;
+            }
+
+            return (BookMeta) item.getItemMeta();
+
+        } catch (Exception ex) {
+
+            KoM.log.warning("[Kom] Erro getBookMeta:");
+            ex.printStackTrace();
+
+            return null;
         }
-        return (BookMeta) inv.getItem(0).getItemMeta();
     }
 
     // metodo magico pra pegar o nivel do mob q nasce aki
@@ -666,7 +741,7 @@ public class ClanLand {
     }
 
     private static void setBookMeta(Location l, BookMeta bm) {
-        Block b = l.getChunk().getBlock(0, 0, 0);
+        Block b = l.getChunk().getBlock(0, 5, 0);
         Inventory inv = ((Chest) b.getState()).getBlockInventory();
         inv.getItem(0).setItemMeta(bm);
         if (bm.getTitle().equals("WILD")) {
@@ -674,8 +749,44 @@ public class ClanLand {
         }
     }
 
+//    public static void setClanAt(Location l, String clan) {
+//        BookMeta bm = getBookMeta(l);
+//        bm.setAuthor("none");
+//        bm.setTitle(clan);
+//        bm.setPage(1, "");
+//        setBookMeta(l, bm);
+//        if (KoM.debugMode) {
+//            KoM.log.info(l.toString());
+//            KoM.log.info(clan);
+//        }
+//        if (clan.equalsIgnoreCase("WILD") || clan.equalsIgnoreCase("SAFE") || clan.equalsIgnoreCase("WARZ")) {
+//            return;
+//        }
+//        int[] xz = getChunkLocation(l);
+//        try {
+//            est = KoM.database.pegaConexao().createStatement();
+//            est.executeUpdate("INSERT INTO kk (tag ,world, x , z ,owner, port) VALUES ("
+//                    + "'" + clan + "', '" + l.getWorld().getName() + "','" + xz[0] + "', '" + xz[1] + "', 'none', '" + Bukkit.getPort() + "')");
+//            //KnightsOfMania.database.pegaConexao().commit();
+//        } catch (SQLException ex) {
+//            KoM.log.info(ex.getMessage());
+//            ex.printStackTrace();
+//        } finally {
+//            try {
+//                est.close();
+//                KoM.database.pegaConexao().commit();
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
     public static void setClanAt(Location l, String clan) {
+
         BookMeta bm = getBookMeta(l);
+        if (bm == null) {
+            Bukkit.getLogger().warning("[KoM] BookMeta null em setClanAt: " + l);
+            return;
+        }
         bm.setAuthor("none");
         bm.setTitle(clan);
         bm.setPage(1, "");
@@ -684,21 +795,31 @@ public class ClanLand {
             KoM.log.info(l.toString());
             KoM.log.info(clan);
         }
-        if (clan.equalsIgnoreCase("WILD") || clan.equalsIgnoreCase("SAFE") || clan.equalsIgnoreCase("WARZ")) {
+        if (clan.equalsIgnoreCase("WILD")
+                || clan.equalsIgnoreCase("SAFE")
+                || clan.equalsIgnoreCase("WARZ")) {
             return;
         }
         int[] xz = getChunkLocation(l);
+        Statement est = null;
         try {
             est = KoM.database.pegaConexao().createStatement();
-            est.executeUpdate("INSERT INTO kk (tag ,world, x , z ,owner, port) VALUES ("
-                    + "'" + clan + "', '" + l.getWorld().getName() + "','" + xz[0] + "', '" + xz[1] + "', 'none', '" + Bukkit.getPort() + "')");
-            //KnightsOfMania.database.pegaConexao().commit();
+            est.executeUpdate(
+                    "INSERT INTO kk (tag ,world, x , z ,owner, port) VALUES ("
+                            + "'" + clan + "', '"
+                            + l.getWorld().getName() + "','"
+                            + xz[0] + "', '"
+                            + xz[1] + "', 'none', '"
+                            + Bukkit.getPort() + "')"
+            );
         } catch (SQLException ex) {
             KoM.log.info(ex.getMessage());
             ex.printStackTrace();
         } finally {
             try {
-                est.close();
+                if (est != null) {
+                    est.close();
+                }
                 KoM.database.pegaConexao().commit();
             } catch (Exception e) {
                 e.printStackTrace();

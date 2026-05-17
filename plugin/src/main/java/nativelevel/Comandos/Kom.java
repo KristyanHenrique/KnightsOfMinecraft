@@ -270,8 +270,7 @@ public class Kom implements CommandExecutor {
                             ClanLand.manager.deleteClanPlayerFromMemory(p2.getUniqueId());
                             ClanLand.storage.deleteClanPlayer(cp);
                             Clan c = cp.getClan();
-                            c.removeMember(p.getUniqueId().toString());
-                            c.removeMember(p.getName());
+                            c.removeMember(p2.getUniqueId());
                             p.sendMessage(ChatColor.GREEN + L.m("Limpei este manolo !"));
                         }
                     } else if (args[0].equals("tiracava") && p.isOp()) {
@@ -975,6 +974,7 @@ public class Kom implements CommandExecutor {
                 }
             } catch (Throwable t) {
                 KoM.log.info(t.getMessage());
+                KoM.debug("teste comando com erro");
                 t.printStackTrace();
             }
         }

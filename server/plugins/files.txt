@@ -1,0 +1,10 @@
+Vault.jar
+WorldEdit.jar
+WorldGuard.jar
+SimpleClans.jar
+MythicMobs.jar
+Quests.jar
+PermissionsEx.jar
+PlayEffect.jar*
+SimplyVanish.jar
+Citizens.jar

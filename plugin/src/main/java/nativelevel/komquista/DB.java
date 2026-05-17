@@ -155,11 +155,11 @@ public class DB {
     }
 
     public static String dbName = "kom";
-    public static String connStr = "jdbc:mysql://localhost:3306/kom?autoReconnect=true";
+    public static String connStr = "jdbc:mysql://localhost:3306/kom?autoReconnect=true&user=komuser&password=KomSenha&useSSL=false";
 
     private static Connection createConnection() {
         try {
-            connStr = "jdbc:mysql://localhost:3306/" + dbName + "?autoReconnect=true";
+            connStr = "jdbc:mysql://localhost:3306/kom?autoReconnect=true&user=komuser&password=KomSenha&useSSL=false";
             try {
                 Class.forName("com.mysql.jdbc.Driver").newInstance();
             } catch (InstantiationException ex) {
@@ -167,7 +167,7 @@ public class DB {
             } catch (IllegalAccessException ex) {
                 ex.printStackTrace();
             }
-            conn = DriverManager.getConnection(connStr, "root", KoM.camila);
+            conn = DriverManager.getConnection(connStr);
             conn.setAutoCommit(true);
 
             return conn;

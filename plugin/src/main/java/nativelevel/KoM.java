@@ -70,6 +70,7 @@ import genericos.komzin.libzinha.comandos.ComandoL;
 import genericos.komzin.libzinha.comandos.ComandoR;
 import genericos.komzin.libzinha.comandos.ComandoTell;
 import io.lumine.xikage.mythicmobs.MythicMobs;
+
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -80,7 +81,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
-import me.blackvein.quests.Quests;
+
 import me.fromgate.playeffect.PlayEffect;
 import me.fromgate.playeffect.VisualEffect;
 import nativelevel.arena1x1.PvPMatchmaking.PvPMatchmaking;
@@ -146,6 +147,8 @@ import nativelevel.oreGen.Gen;
 import nativelevel.oreGen.Reflector;
 import nativelevel.playerboolean.StageDB;
 import nativelevel.precocabeca.Principal;
+import nativelevel.quests.DisabledKomQuestService;
+import nativelevel.quests.KomQuestService;
 import nativelevel.rankings.RankDB;
 import nativelevel.sc.bugfixes.SCBugFixes;
 import nativelevel.gemas.SocketListener;
@@ -272,7 +275,7 @@ public class KoM extends JavaPlugin {
     public static Plugin itemAttributes;
     public static Arena2x2 arena;
     public static PvPMatchmaking pvp;
-    public static Quests quests;
+    public static KomQuestService questService = DisabledKomQuestService.INSTANCE;
     public static KomAjuda ajuda;
     public static KomQuista komq;
 
@@ -282,9 +285,9 @@ public class KoM extends JavaPlugin {
     //
 
     public static void debug(String m) {
-        if (KoM.debugMode) {
+//        if (KoM.debugMode) {
             log.info("[DEBUG] " + m);
-        }
+//        }
     }
 
     public static void act(Entity p, String msg) {
@@ -296,7 +299,6 @@ public class KoM extends JavaPlugin {
         }
     }
 
-   
 
     public static ItemStack addGlow(ItemStack item) {
         net.minecraft.server.v1_12_R1.ItemStack nmsStack = CraftItemStack.asNMSCopy(item);
@@ -336,7 +338,6 @@ public class KoM extends JavaPlugin {
             KoM.log.info("======= SERVER DE TESTES KOM ========");
         }
 
-        quests = (Quests) Bukkit.getPluginManager().getPlugin("Quests");
         L.LoadLang();
         Aura.onEnable();
         Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
@@ -346,16 +347,25 @@ public class KoM extends JavaPlugin {
         new ConfigKom();
         try {
             config = new ConfigManager(this.getDataFolder().getAbsolutePath() + "/ConfigKom.yml");
-            if (config.getConfig().getString("database.name") == null || config.getConfig().getString("database.name") == "") {
-                config.getConfig().set("database.name", "kom");
-            }
-            if (config.getConfig().getString("database.pass") == null || config.getConfig().getString("database.pass") == "") {
-                config.getConfig().set("database.pass", "123batata");
-            } else {
 
-                camila = config.getConfig().getString("database.pass");
+            String dbName = config.getConfig().getString("database.name");
+            String dbPass = config.getConfig().getString("database.pass");
+
+            if (dbName == null || dbName.isEmpty()) {
+                dbName = "kom";
+                config.getConfig().set("database.name", dbName);
             }
+
+            if (dbPass == null || dbPass.isEmpty()) {
+                dbPass = "123batata";
+                config.getConfig().set("database.pass", dbPass);
+            }
+
+            // salva na variável global se você quiser usar depois
+            camila = dbPass;
+
             config.SaveConfig();
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -409,7 +419,7 @@ public class KoM extends JavaPlugin {
             }
         };
         Bukkit.getScheduler().scheduleSyncRepeatingTask(this, r4, 20 * 60 * 60 * 2, 20 * 60 * 60 * 2);
-        
+
         // Bukkit.getScheduler().scheduleSyncRepeatingTask(this, r2, 20 * 60 * 30, 20 * 60 * 30);
         Runnable r3 = new Runnable() {
             @Override
@@ -476,7 +486,7 @@ public class KoM extends JavaPlugin {
         Bukkit.getPluginCommand("l").setExecutor(new ComandoL());
         Bukkit.getPluginCommand("tell").setExecutor(new ComandoTell());
         Bukkit.getPluginCommand("r").setExecutor(new ComandoR());
-        
+
         Bukkit.getPluginCommand("chatbb").setExecutor(new ComandoChatbb());
         Bukkit.getPluginCommand("anuncio").setExecutor(new CmdAnuncio());
         Bukkit.getPluginCommand("like").setExecutor(new ComandoLike());
@@ -612,7 +622,7 @@ public class KoM extends JavaPlugin {
         reiniciando = true;
 
         komq.onDisable();
-        
+
         for (UUID u : GeneralListener.loots.keySet()) {
             List<ItemStack> items = GeneralListener.loots.get(u);
             ItemStack[] ss = items.toArray(new ItemStack[items.size()]);
@@ -729,7 +739,7 @@ public class KoM extends JavaPlugin {
         ItemStack[] c = inv.getContents();
         for (int x = 0; x < c.length; x++) {
             ItemStack is = c[x];
-            if (is != null && is.isSimilar(ss) && is.getAmount()==ss.getAmount()) {
+            if (is != null && is.isSimilar(ss) && is.getAmount() == ss.getAmount()) {
                 c[x] = null;
                 p.getInventory().setContents(c);
                 p.updateInventory();
@@ -799,6 +809,7 @@ public class KoM extends JavaPlugin {
         }
         return gastou;
     }
+
     public static boolean safeMode = false;
 
     public static void efeitoBlocos(Entity e, Material m) {
@@ -975,11 +986,11 @@ public class KoM extends JavaPlugin {
         final Block txx = tocha;
         PlayEffect.play(VisualEffect.SPELL_INSTANT, air.getLocation().add(0.5, 0, 0.5), "num:1");
         Bukkit.getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
-            @Override
-            public void run() {
-                txx.setTypeIdAndData(ida, datai, false);
-            }
-        },
+                    @Override
+                    public void run() {
+                        txx.setTypeIdAndData(ida, datai, false);
+                    }
+                },
                 1
         );
         tocha.getState()
@@ -1093,10 +1104,11 @@ public class KoM extends JavaPlugin {
             ev.setCancelled(true);
         }
     }
+
     public boolean[] attacking
             = {
-                false, false, false, false
-            };
+            false, false, false, false
+    };
 
     public Clan getClan(String s) {
         return ClanLand.getClan(s);

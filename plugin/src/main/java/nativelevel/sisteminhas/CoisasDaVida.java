@@ -21,6 +21,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.util.Vector;
+import java.util.Collection;
 
 public class CoisasDaVida extends KomSystem {
 
@@ -35,7 +36,16 @@ public class CoisasDaVida extends KomSystem {
         acontecemCoisasEmNossasVidas();
         Runnable r = new Runnable() {
             public void run() {
-                Player random = (Player) Bukkit.getServer().getOnlinePlayers().toArray()[rnd.nextInt(Bukkit.getServer().getOnlinePlayers().toArray().length)];
+                //Player random = (Player) Bukkit.getServer().getOnlinePlayers().toArray()[rnd.nextInt(Bukkit.getServer().getOnlinePlayers().toArray().length)];
+                Collection<? extends Player> players = Bukkit.getOnlinePlayers();
+
+                if (players.isEmpty()) {
+                    return;
+                }
+
+                Player[] array = players.toArray(new Player[0]);
+                Player random = array[rnd.nextInt(array.length)];
+
                 if (random != null) {
                     Acontecimento rolou = (Acontecimento) acontecimentos.get(rnd.nextInt(acontecimentos.size()));
                     rolou.acontece(random);

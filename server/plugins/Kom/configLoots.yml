@@ -1,0 +1,96 @@
+#
+#    all:
+#        Melon Block: melons
+#    world:
+#        Bookshelf: books
+
+
+
+LootBags: false
+LootBagKey: '&r&0'
+DispenserLoot: true
+MobDropLoot: true
+MobSpawnLoot: true
+WorldMobDropLoot: true
+WorldMobSpawnLoot: true
+RegionMobDropLoot: true
+RegionMobSpawnLoot: true
+MobTypes: true
+NamedMobs: true
+FishingLoot: true
+VotifierLoot: false
+Blocks:
+  - Chest
+  - Trapped Chest
+  - Ender Chest
+  - Dispenser
+  - Dropper
+  - Bookshelf
+AutoLink: []
+ReplaceMobLoot: true
+OnlyDropLootWhenKilledByPlayer: false
+OnlyDropExpWhenKilledByPlayer: false
+MobLootDropPercentage: 20
+LootingBonusPerLevel: 5
+RegionPlugin: auto
+LootBonusPermissions: []
+Messages:
+  Permission: '&4You do not have permission to do that.'
+  ExperienceLooted: '&5You gained &6<amount>&5 experience from looting the chest.'
+  MoneyLooted: '&5You looted &6<amount>&5 from the chest.'
+  MoneyCharged: '&5You have been charged &6<amount>&5 to loot the chest.'
+  InsufficientFunds: '&4You must have &6<amount>&4 to loot the chest.'
+  AutoLoot: '&5You looted &6<item>&5 from the chest.'
+  Overflow: '&5The Chest is overflowing with loot!'
+  ChestTimeRemaining: '&4You must wait &6<time>&4 to receive more loot!'
+  EmptyChestTimeRemaining: '&4You must wait &6<time>&4 to receive more loot!'
+  CommandTimeRemaining: '&4You must wait &6<time>&4 to receive more loot!'
+  DispenserTimeRemaining: ''
+  MobTimeRemaining: '&4You must wait &6<time>&4 to receive more loot!'
+  MobDroppedMoney: '&5You loot &6<amount>.'
+  MobDroppedItem: ''
+  MobDroppedExperience: ''
+  LootMessage: ''
+  LootBroadcast: ''
+ChestName: '&6<name>'
+UseDamageTags: true
+<dam>: '&5<amount> damage'
+<holy>: '&6+<amount> holy damage'
+<fire>: '&4+<amount> fire'
+<bug>: '&2+<amount> bug repellent'
+<thorns>: '&8<chance>% chance of 1-4 damage'
+<def>: '&5<amount> defense'
+<firedef>: '&4+<amount> fire defense'
+<rangedef>: '&2+<amount> range defense'
+<blastdef>: '&1+<amount> explosion defense'
+<falldef>: '&b+<amount> fall defense'
+MythicDropsTierColor: '&0'
+Defaults:
+  ResetTime:
+    Days: 1
+    Hours: 0
+    Minutes: 0
+    Seconds: 0
+  AutoLoot: false
+  GlobalReset: false
+  BreakAndRespawn: false
+  RoundDownTime: false
+  ItemsPerColl: 1
+RestrictAll: false
+RestrictedPhatLoots:
+  - PhatLoot1
+  - PhatLoot2
+  - PhatLoot3
+MinimumTierNotification: 100
+SetChestsAsUnlockable: true
+DivideMoneyAmountBy100: false
+PlaySoundOnAutoLoot: true
+PlaySoundOnChestBreak: true
+UseBreakAndRespawn: true
+ShuffleLoot: false
+AllowDuplicateItemsFromCollections: true
+ForgetInventoryTime: 60
+UnlinkGlobalChestsThatNeverReset: false
+ApplyCooldownToCommandLoot: false
+AutoSavePeriod: 1440
+AutoBreakOnPunch: false

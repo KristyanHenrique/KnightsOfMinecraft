@@ -121,16 +121,8 @@
         
         <dependency>
             <groupId>local</groupId>
-            <artifactId>quests</artifactId>
-            <version>2.9.7</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/libs/Quests-2.9.7.jar</systemPath>
-        </dependency>
-
-        <dependency>
-            <groupId>local</groupId>
             <artifactId>simplyvanish</artifactId>
-            <version>1.0.0</version>
+            <version>1.2.2</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/libs/simplyvanish.jar</systemPath>
         </dependency>
@@ -145,11 +137,14 @@
 
         <dependency>
             <groupId>local</groupId>
-            <artifactId>citizens</artifactId>
-            <version>2.0.13</version>
+            <artifactId>citizensnpcs</artifactId>
+            <version>2.0.22
+            </version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/libs/Citizens.jar</systemPath>
+            <systemPath>${project.basedir}/libs/citizens-2.0.22-SNAPSHOT.jar</systemPath>
         </dependency> 
+
+    </dependencies>
 
     <build>
         <sourceDirectory>src/main/java</sourceDirectory>
@@ -161,7 +156,6 @@
         </resources>
 
         <plugins>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -170,8 +164,8 @@
                     <source>1.8</source>
                     <target>1.8</target>
                 </configuration>
-            </plugin>
 
+            </plugin>
         </plugins>
 
     </build>

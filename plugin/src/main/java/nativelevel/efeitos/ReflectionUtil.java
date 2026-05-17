@@ -44,20 +44,45 @@ public abstract class ReflectionUtil {
         CORRESPONDING_TYPES.put(Boolean.class, boolean.class);
     }
 
+//    public enum DynamicPackage {
+//
+//        MINECRAFT_SERVER {
+//                    @Override
+//                    public String toString() {
+//                        return "net.minecraft.server." + Bukkit.getServer().getClass().getPackage().getName().substring(23, 30);
+//                    }
+//                },
+//        CRAFTBUKKIT {
+//                    @Override
+//                    public String toString() {
+//                        return Bukkit.getServer().getClass().getPackage().getName();
+//                    }
+//                };
+//    }
+
     public enum DynamicPackage {
 
         MINECRAFT_SERVER {
-                    @Override
-                    public String toString() {
-                        return "net.minecraft.server." + Bukkit.getServer().getClass().getPackage().getName().substring(23, 30);
-                    }
-                },
+            @Override
+            public String toString() {
+                return "net.minecraft.server." +
+                        Bukkit.getServer()
+                                .getClass()
+                                .getPackage()
+                                .getName()
+                                .split("\\.")[3];
+            }
+        },
+
         CRAFTBUKKIT {
-                    @Override
-                    public String toString() {
-                        return Bukkit.getServer().getClass().getPackage().getName();
-                    }
-                };
+            @Override
+            public String toString() {
+                return Bukkit.getServer()
+                        .getClass()
+                        .getPackage()
+                        .getName();
+            }
+        };
     }
 
     public static class FieldEntry {

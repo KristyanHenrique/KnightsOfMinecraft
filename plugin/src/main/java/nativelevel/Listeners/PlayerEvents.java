@@ -9,11 +9,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import me.asofold.bpl.simplyvanish.SimplyVanish;
 import me.asofold.bpl.simplyvanish.config.VanishConfig;
-import me.blackvein.quests.Quest;
 import nativelevel.Attributes.Health;
 import nativelevel.CFG;
 import nativelevel.Classes.Farmer;
@@ -170,22 +168,10 @@ public class PlayerEvents implements Listener {
         if (ev.getNewLevel() > ev.getOldLevel()) {
             SBCore.setLevelPoints(ev.getPlayer(), ev.getPlayer().getLevel());
             ev.getPlayer().sendMessage(ChatColor.GREEN + L.m("Level Up! Voce esta no nivel " + ChatColor.YELLOW + ChatColor.BOLD + "%", ev.getNewLevel()));
-            String quests = "";
-            for(Quest q  : KoM.quests.quests) {
-                if (q.customRequirements != null && q.customRequirements.containsKey("Nivel KoM")) {
-                    Map<String, Object> mapa = q.customRequirements.get("Nivel KoM");
-                    if (mapa != null) {
-                        int nivel = Integer.valueOf((String) mapa.get("Level"));
-                        if(nivel==ev.getNewLevel()) {
-                            quests += "- "+q.name+"   ";
-                        }
-                    }
-
-                }
-            }
-            if(quests.length() > 2) {
-                ev.getPlayer().sendMessage(ChatColor.GREEN+"!!! Novas Missões Disponíveis !!!");
-                ev.getPlayer().sendMessage(ChatColor.YELLOW+quests);
+            List<String> quests = KoM.questService.getNewQuestNamesForLevel(ev.getNewLevel());
+            if (!quests.isEmpty()) {
+                ev.getPlayer().sendMessage(ChatColor.GREEN + "!!! Novas Missões Disponíveis !!!");
+                ev.getPlayer().sendMessage(ChatColor.YELLOW + "- " + String.join("   - ", quests));
             }
             ev.getPlayer().sendMessage(ChatColor.GREEN + "+Dano: " + ChatColor.YELLOW + " +0.5% " + ChatColor.GREEN + "  +Vida: " + ChatColor.YELLOW + "0.2");
             List<String> primarias = Jobs.getPrimarias(ev.getPlayer());

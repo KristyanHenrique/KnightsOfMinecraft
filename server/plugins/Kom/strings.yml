@@ -1,0 +1,6 @@
+Classes:
+  Alchemist: Alquimista
+  AlchemistClass:
+    ThrowTnt: Apenas bons alquimistas podem jogar TnT !
+HitLeg: Voce machucou sua perna !
+TooHeavy: Voce esta levando peso demais em sua armadura !!

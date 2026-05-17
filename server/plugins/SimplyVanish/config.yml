@@ -1,0 +1,96 @@
+flags:
+  bypass:
+    blocks:
+    - '23'
+    - '54'
+    - '61'
+    - '62'
+    - '58'
+    - '116'
+    - '117'
+    - '118'
+    entities:
+    - MINECART
+    ignore-permissions: true
+  cmd:
+    whitelist: false
+    commands:
+    - me
+    - tell
+    - vantell
+    - tellvan
+pickup:
+  exp:
+    workaround:
+      enabled: true
+      distance:
+        threshold: 3.0
+        teleport: 1.0
+        remove: 0.5
+      velocity: 0.3
+messages:
+  suppress:
+    join: false
+    quit: false
+  fake:
+    enabled: false
+    join: '&e%name joined the game.'
+    quit: '&e%name left the game.'
+  notify:
+    state:
+      enabled: false
+      permission: simplyvanish.see-all
+    ping:
+      enabled: false
+      period: 30
+save:
+  enabled: true
+  always: true
+  interval: 0
+  delay: 10
+auto-vanish:
+  use: false
+  permission: simplyvanish.auto-vanish
+no-abort: false
+permissions:
+  allow-ops: true
+  superperms: true
+  fake-permissions:
+    set1:
+      permissions:
+      - all
+      players: []
+    set2:
+      permissions:
+      - vanish.self
+      - reappear.self
+      - flags.display.self
+      - flags.set.self.drop
+      players: []
+extended-configuration: true
+load-plugins: []
+commands:
+  vantell:
+    log: false
+    mirror: true
+    aliases: []
+  vanish:
+    aliases: []
+  reappear:
+    aliases: []
+  tvanish:
+    aliases: []
+  simplyvanish:
+    aliases: []
+  vanished:
+    aliases: []
+  vanflag:
+    aliases: []
+  vanpeek:
+    aliases: []
+inventories:
+  allow-real-peek: true
+flag-sets:
+  cc: +cmd +chat
+  cl: '*clear'
+  act: +damage +attack +target +interact +pickup +drop

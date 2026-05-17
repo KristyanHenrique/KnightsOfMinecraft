@@ -216,7 +216,18 @@ public class Mobs extends KomSystem {
             return;
         }
 
-        final String tipo = ClanLand.getTypeAt(ev.getEntity().getLocation());
+//        final String tipo = ClanLand.getTypeAt(ev.getEntity().getLocation());
+        String tipoTemp = null;
+
+        try {
+            tipoTemp = ClanLand.getTypeAt(ev.getEntity().getLocation());
+        } catch (Exception ex) {
+            Bukkit.getLogger().warning("[KoM] Erro ao obter tipo do terreno:");
+            ex.printStackTrace();
+        }
+
+        final String tipo = tipoTemp;
+
         if (ev.getSpawnReason() == CreatureSpawnEvent.SpawnReason.SPAWNER) {
             if (ev.getEntity().getWorld().getName().equalsIgnoreCase("vila")) {
                 ev.setCancelled(true);
@@ -299,7 +310,8 @@ public class Mobs extends KomSystem {
                 Deuses.matou++;
                 return;
             }
-            if (WorldGuardKom.ehSafeZone(ev.getLocation()) || tipo.equalsIgnoreCase("SAFE")) {
+//            if (WorldGuardKom.ehSafeZone(ev.getLocation()) || tipo.equalsIgnoreCase("SAFE")) {
+            if (WorldGuardKom.ehSafeZone(ev.getLocation()) || "SAFE".equalsIgnoreCase(tipo)) {
                 ev.setCancelled(true);
                 return;
             }
@@ -961,29 +973,101 @@ public class Mobs extends KomSystem {
         return ChatColor.AQUA + "➊" + ChatColor.GREEN;
     }
 
+//    public static boolean temMonstropedia(Player p) {
+//        for (ItemStack ss : p.getInventory().getContents()) {
+//            if (ss == null || ss.getType() != Material.WRITTEN_BOOK) {
+//                continue;
+//            }
+//            BookMeta meta = (BookMeta) ss.getItemMeta();
+//            if (meta.getDisplayName() != null && meta.getDisplayName().contains("Monstropedia")) {
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
+
     public static boolean temMonstropedia(Player p) {
+
+        if (p == null || p.getInventory() == null)
+            return false;
         for (ItemStack ss : p.getInventory().getContents()) {
-            if (ss == null || ss.getType() != Material.WRITTEN_BOOK) {
+            if (ss == null)
                 continue;
-            }
+            if (ss.getType() != Material.WRITTEN_BOOK)
+                continue;
+            if (!ss.hasItemMeta())
+                continue;
+            if (!(ss.getItemMeta() instanceof BookMeta))
+                continue;
             BookMeta meta = (BookMeta) ss.getItemMeta();
-            if (meta.getDisplayName() != null && meta.getDisplayName().contains("Monstropedia")) {
+            if (meta == null)
+                continue;
+            if (meta.getDisplayName() != null
+                    && meta.getDisplayName().contains("Monstropedia")) {
                 return true;
             }
         }
+
         return false;
     }
 
+//    public static ItemStack getMonstropedia() {
+//        ItemStack livro = new ItemStack(Material.WRITTEN_BOOK, 1);
+//        BookMeta meta = (BookMeta) livro.getItemMeta();
+//        meta.setAuthor("Jabu");
+//        meta.setDisplayName(Raridade.Incomum.getIcone() + ChatColor.WHITE + " Monstropedia");
+//        List<String> paginas = new ArrayList<String>();
+//        paginas.add(ChatColor.RED + "Monstropédia\nVersão 1.0\n\n" + ChatColor.BLUE + "Anotações sobre peculiaridades evolutivas dos monstros que vivem em Aden.");
+//        paginas.add(ChatColor.RED + "Sumário\n\n" + ChatColor.BLUE + "Monstros a anos que residem em Aden, nossas terras. Assim como humanos, monstros possuem características, neste livro, tenrarei descrever algumas caracteristicas estudadas.");
+//        for (EfeitoMobs ef : EfeitoMobs.values()) {
+//            paginas.add(ChatColor.RED + ef.desc + "\n\n" + ChatColor.BLUE + "Simbologia: " + ChatColor.BLACK + ef.chara + "\n\n" + ChatColor.BLUE + ef.oqFaz);
+//        }
+//        meta.setPages(paginas);
+//        livro.setItemMeta(meta);
+//        return livro;
+//    }
+
     public static ItemStack getMonstropedia() {
         ItemStack livro = new ItemStack(Material.WRITTEN_BOOK, 1);
+        if (!(livro.getItemMeta() instanceof BookMeta)) {
+            return livro;
+        }
         BookMeta meta = (BookMeta) livro.getItemMeta();
+        if (meta == null) {
+            return livro;
+        }
         meta.setAuthor("Jabu");
-        meta.setDisplayName(Raridade.Incomum.getIcone() + ChatColor.WHITE + " Monstropedia");
+        meta.setDisplayName(
+                Raridade.Incomum.getIcone()
+                        + ChatColor.WHITE
+                        + " Monstropedia"
+        );
         List<String> paginas = new ArrayList<String>();
-        paginas.add(ChatColor.RED + "Monstropédia\nVersão 1.0\n\n" + ChatColor.BLUE + "Anotações sobre peculiaridades evolutivas dos monstros que vivem em Aden.");
-        paginas.add(ChatColor.RED + "Sumário\n\n" + ChatColor.BLUE + "Monstros a anos que residem em Aden, nossas terras. Assim como humanos, monstros possuem características, neste livro, tenrarei descrever algumas caracteristicas estudadas.");
+        paginas.add(
+                ChatColor.RED + "Monstropédia\nVersão 1.0\n\n"
+                        + ChatColor.BLUE
+                        + "Anotações sobre peculiaridades evolutivas dos monstros que vivem em Aden."
+        );
+
+        paginas.add(
+                ChatColor.RED + "Sumário\n\n"
+                        + ChatColor.BLUE
+                        + "Monstros a anos que residem em Aden, nossas terras. "
+                        + "Assim como humanos, monstros possuem características, "
+                        + "neste livro, tentarei descrever algumas características estudadas."
+        );
+
         for (EfeitoMobs ef : EfeitoMobs.values()) {
-            paginas.add(ChatColor.RED + ef.desc + "\n\n" + ChatColor.BLUE + "Simbologia: " + ChatColor.BLACK + ef.chara + "\n\n" + ChatColor.BLUE + ef.oqFaz);
+            if (ef == null)
+                continue;
+            paginas.add(
+                    ChatColor.RED + ef.desc
+                            + "\n\n"
+                            + ChatColor.BLUE + "Simbologia: "
+                            + ChatColor.BLACK + ef.chara
+                            + "\n\n"
+                            + ChatColor.BLUE + ef.oqFaz
+            );
         }
         meta.setPages(paginas);
         livro.setItemMeta(meta);

@@ -263,7 +263,12 @@ public class PhatLootsConfig {
      * @return The String or null if the string was not found or empty
      */
     private static String getString(ConfigurationSection config, String key) {
-        String string = ChatColor.translateAlternateColorCodes('&', config.getString(key));
-        return string.isEmpty() ? null : string;
+        String value = config.getString(key, "");
+
+        if (value.isEmpty()) {
+            return "";
+        }
+
+        return ChatColor.translateAlternateColorCodes('&', value);
     }
 }
