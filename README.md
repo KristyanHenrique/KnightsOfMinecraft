@@ -7,6 +7,7 @@ Depois de muito tempo vendo a dificuldade que muita gente tinha para subir o nos
 ### 1. Configure o banco de dados
 
 * Crie um servidor **MariaDB**.
+* Crie um Banco de dados chamado "kom"
 * Importe o arquivo `kom.sql` localizado na raiz do projeto.
 
 ### 2. Crie o usuário do banco
